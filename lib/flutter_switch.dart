@@ -28,6 +28,8 @@ class FlutterSwitch extends StatefulWidget {
     this.valueFontSize = 16.0,
     this.borderRadius = 20.0,
     this.padding = 4.0,
+    this.innerVerticalPadding = 0.0,
+    this.innerHorizontalPadding = 0.0,
     this.showOnOff = false,
     this.activeText,
     this.inactiveText,
@@ -195,6 +197,20 @@ class FlutterSwitch extends StatefulWidget {
   /// Defaults to the value of 4.0.
   final double padding;
 
+  /// The vertical padding of the switch.
+  ///
+  /// Doesn't affect the padding for the toggle of the switch.
+  ///
+  /// Defaults to the value of 0.0.
+  final double innerVerticalPadding;
+
+  /// The horizontal padding of the switch.
+  ///
+  /// Doesn't affect the padding for the toggle of the switch.
+  ///
+  /// Defaults to the value of 0.0.
+  final double innerHorizontalPadding;
+
   /// The border of the switch.
   ///
   /// This property will give a uniform border to both states of the toggle
@@ -320,7 +336,8 @@ class _FlutterSwitchState extends State<FlutterSwitch>
           widget.toggleBorder as Border?;
     }
 
-    double _textSpace = widget.width - widget.toggleSize;
+    final _textSpace = widget.width - widget.toggleSize;
+    final switchBorderRadius = BorderRadius.circular(widget.borderRadius);
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -346,12 +363,21 @@ class _FlutterSwitchState extends State<FlutterSwitch>
                   height: widget.height,
                   padding: EdgeInsets.all(widget.padding),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    color: _switchColor,
-                    border: _switchBorder,
+                    borderRadius: switchBorderRadius,
                   ),
                   child: Stack(
-                    children: <Widget>[
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: widget.innerVerticalPadding,
+                          horizontal: widget.innerHorizontalPadding,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _switchColor,
+                          border: _switchBorder,
+                          borderRadius: switchBorderRadius,
+                        ),
+                      ),
                       AnimatedOpacity(
                         opacity: widget.value ? 1.0 : 0.0,
                         duration: widget.duration,
